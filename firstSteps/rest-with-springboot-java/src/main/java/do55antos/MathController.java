@@ -6,12 +6,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import do55antos.exceptions.UnsupportedMathOperationException;
+import do55antos.converters.Converter;
+import do55antos.math.Operation;
 
 @RestController
 public class MathController {
 	
 	private final AtomicLong counter = new AtomicLong();
+	
+	Operation calculator = new Operation();
 	
 	@GetMapping("/sum/{numberOne}/{numberTwo}")
 	public Double sum(
@@ -19,24 +22,54 @@ public class MathController {
 			@PathVariable(value = "numberTwo") String numberTwo
 			) throws Exception {
 		
-		if(!isNumeric(numberOne) || !isNumeric(numberTwo)) {
-			throw new UnsupportedMathOperationException("Please set a numeric value.");
-			}
+		return calculator.sum(
+				Converter.convertToDouble(numberOne), Converter.convertToDouble(numberTwo));
+	}
+	
+	@GetMapping("/subtraction/{numberOne}/{numberTwo}")
+	public Double subtraction(
+			@PathVariable(value = "numberOne") String numberOne,
+			@PathVariable(value = "numberTwo") String numberTwo
+			) throws Exception {
 		
-		return convertToDouble(numberOne) + convertToDouble(numberTwo);
+		return calculator.subtraction(
+				Converter.convertToDouble(numberOne), Converter.convertToDouble(numberTwo));
+	}
+	
+	@GetMapping("/multiplication/{numberOne}/{numberTwo}")
+	public Double multiplication(
+			@PathVariable(value = "numberOne") String numberOne,
+			@PathVariable(value = "numberTwo") String numberTwo
+			) throws Exception {
+		
+		return calculator.multiplication(Converter.convertToDouble(numberOne), Converter.convertToDouble(numberTwo));
+	}
+	
+	@GetMapping("/division/{numberOne}/{numberTwo}")
+	public Double division(
+
+			@PathVariable(value = "numberOne") String numberOne,
+			@PathVariable(value = "numberTwo") String numberTwo
+			) throws Exception {
+		
+		return calculator.division(Converter.convertToDouble(numberOne), Converter.convertToDouble(numberTwo));
+	}	
+	
+	@GetMapping("/average/{numberOne}/{numberTwo}")
+	public Double average(
+			@PathVariable(value = "numberOne") String numberOne,
+			@PathVariable(value = "numberTwo") String numberTwo
+			) throws Exception {	
+		
+		return calculator.average(
+				Converter.convertToDouble(numberOne), Converter.convertToDouble(numberTwo));
 	}
 
-	private Double convertToDouble(String strNumber) {
-		if (strNumber == null) return 0D;
-		//BR 10,25  US 10.25
-		String number = strNumber.replaceAll("," , ".");
-		if (isNumeric(number)) return Double.parseDouble(number);
-		return 0D;
-	}
-
-	private boolean isNumeric(String strNumber) {
-		if (strNumber == null) return false;
-		String number = strNumber.replaceAll("," , ".");
-		return number.matches("[-+]?[0-9]*\\.?[0-9]+");
-	}
+	@GetMapping("/squareroot/{number}")
+	public Double root(
+			@PathVariable(value = "number") String number
+			) throws Exception {		
+		return calculator.squareRoot(Converter.convertToDouble(number));
+	}		
+	
 }
