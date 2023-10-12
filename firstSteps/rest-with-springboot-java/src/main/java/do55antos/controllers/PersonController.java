@@ -1,9 +1,10 @@
-package do55antos;
+package do55antos.controllers;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +30,7 @@ public class PersonController {
 	}
 	
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Person findById(@PathVariable(value = "id") String id) {		
+	public Person findById(@PathVariable(value = "id") Long id) {		
 		return service.findById(id);
 	}
 	
@@ -47,9 +48,10 @@ public class PersonController {
 		return service.update(person);
 	}
 	
-	@DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public void delete(@PathVariable(value = "id") String id) {		
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {		
 		service.delete(id);
+		return ResponseEntity.noContent().build();
 	}
 	
 	
