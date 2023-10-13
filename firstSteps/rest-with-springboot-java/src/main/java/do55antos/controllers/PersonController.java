@@ -18,7 +18,7 @@ import do55antos.data_vo_v1.PersonVO;
 import do55antos.services.PersonService;
 
 @RestController
-@RequestMapping("/person")
+@RequestMapping("/api/person/v1")
 public class PersonController {
 	
 	@Autowired
