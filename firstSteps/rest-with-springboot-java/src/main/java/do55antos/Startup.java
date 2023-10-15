@@ -1,6 +1,6 @@
 /**
  * Improving skills in API RESTful
- * last commit 13, October, 2023 - 7 am (UTC -3)
+ * last commit 15, October, 2023 - 3:30 am (UTC -3) - HATEOAS implementation
  */
 
 package do55antos;
