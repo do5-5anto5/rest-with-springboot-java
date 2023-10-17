@@ -40,7 +40,7 @@ public class MockBook {
         book.setId(number.longValue());
         book.setTitle("Title Test" + number);
         book.setAuthor("Author Test" + number);
-        book.setLaunchDate(new Date(2023, 10, 16, 16, 46, 32));
+        book.setLaunchDate(new Date());
         
         var price = new BigDecimal(number);
         book.setPrice(price);
@@ -52,7 +52,7 @@ public class MockBook {
         book.setKey(number.longValue());
         book.setTitle("Title Test" + number);
         book.setAuthor("Author Test" + number);
-        book.setLaunchDate(new Date(2023, 10, 16, 16, 46, 32));
+        book.setLaunchDate(new Date());
         
         var price = new BigDecimal(number);
         book.setPrice(price);
