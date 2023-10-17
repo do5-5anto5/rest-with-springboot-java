@@ -83,7 +83,7 @@ public class PersonController {
 	@PutMapping(produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,
 			MediaType.APPLICATION_YML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,
 					MediaType.APPLICATION_YML })
-	@Operation(summary = "Adds a new Person", 
+	@Operation(summary = "Updates a new Person", 
 	description = "Updates a Person by passing in a JSON, XML or YML representation of person",
 	tags = { "People" },
 	responses = {
@@ -101,8 +101,8 @@ public class PersonController {
 	}
 
 	@DeleteMapping(value = "/{id}")
-	@Operation(summary = "Adds a new Person", 
-	description = "Deletes a Person by passing in a JSON, XML or YML representation of person",
+	@Operation(summary = "Deletes a Person", 
+	description = "Deletes a Person",
 	tags = { "People" },
 	responses = {
 		@ApiResponse(description = "No content", responseCode = "204", content = @Content),
