@@ -1,4 +1,4 @@
-package do55antos.securityJwt;
+package do55antos.security.jwt;
 
 import java.util.Base64;
 import java.util.Date;
