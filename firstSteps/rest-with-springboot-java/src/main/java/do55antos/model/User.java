@@ -33,7 +33,7 @@ public class User implements UserDetails, Serializable {
 	@Column(name = "user_name", unique = true)
 	private String userName;
 	
-	@Column(name = "full_name", unique = true)
+	@Column(name = "full_name")
 	private String fullName;
 	
 	@Column(name = "password")
@@ -51,16 +51,14 @@ public class User implements UserDetails, Serializable {
 	@Column(name = "enabled")
 	private Boolean enabled;
 	
-	public User() {
-	}
-	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_permission", joinColumns = {@JoinColumn (name = "id_user")},
-		inverseJoinColumns = {@JoinColumn (name = "id_user")}
+		inverseJoinColumns = {@JoinColumn (name = "id_permission")}
 	)
 	private List<Permission> permissions;
 	
-	
+	public User() {
+	}
 
 	public List<String> getRoles(){
 		List<String> roles = new ArrayList<>();
@@ -87,22 +85,22 @@ public class User implements UserDetails, Serializable {
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return this.isAccountNonExpired();
+		return this.accountNonExpired;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return this.isAccountNonLocked();
+		return this.accountNonLocked;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return this.isCredentialsNonExpired();
+		return this.credentialsNonExpired;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return this.isEnabled();
+		return this.enabled;
 	}
 
 	public Long getId() {
@@ -195,6 +193,5 @@ public class User implements UserDetails, Serializable {
 				&& Objects.equals(id, other.id) && Objects.equals(password, other.password)
 				&& Objects.equals(permissions, other.permissions) && Objects.equals(userName, other.userName);
 	}
-	
-	
+
 }
