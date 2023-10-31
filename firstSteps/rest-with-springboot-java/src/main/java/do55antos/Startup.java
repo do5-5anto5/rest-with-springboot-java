@@ -1,6 +1,6 @@
 /**
  * Improving skills in API RESTful
- * last commit 15, October, 2023 - 3:30 am (UTC -3) - HATEOAS implementation
+ * last commit 17, October, 2023 _ 6:30 pm (UTC -3) _ validate Swagger UI Page with Test Containers and Rest Assured
  */
 
 package do55antos;
