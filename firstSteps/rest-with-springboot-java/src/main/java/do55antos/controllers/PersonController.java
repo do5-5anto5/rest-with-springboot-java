@@ -15,11 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import do55antos.data_vo_v1.PersonVO;
-import do55antos.data_vo_v2.PersonVOV2;
 import do55antos.services.PersonService;
 
 @RestController
-@RequestMapping("/person")
+@RequestMapping("/api/person/v1")
 public class PersonController {
 	
 	@Autowired
@@ -40,14 +39,6 @@ public class PersonController {
 			consumes = MediaType.APPLICATION_JSON_VALUE)	
 	public PersonVO create(@RequestBody PersonVO person) {		
 		return service.create(person);
-	}
-	
-	@PostMapping(
-			value = "/v2",
-			produces = MediaType.APPLICATION_JSON_VALUE,
-			consumes = MediaType.APPLICATION_JSON_VALUE)	
-	public PersonVOV2 createV2(@RequestBody PersonVOV2 person) {		
-		return service.createV2(person);
 	}
 	
 	@PutMapping(
