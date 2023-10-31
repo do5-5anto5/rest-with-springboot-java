@@ -1,6 +1,6 @@
 /**
  * Improving skills in API RESTful
- * last commit 30, October, 2023 _ 7:30 pm (UTC -3) _ validate Swagger UI Page with Test Containers and Rest Assured
+ * last commit 31, October, 2023 _ 2:15 pm (UTC -3) _ refresh Token
  * 
  * 30/10/2023 - testing authentication in postman
  * 	problems: Error 500,
@@ -13,9 +13,12 @@
  *		and insert it in user on database
  *			-solved
  *
- *	edit environment variable in Postman, setting variables {{username}} and {{password}}
+ *	Edit environment variable in Postman, setting variables {{username}} and {{password}}
  *	to dynamic authenticate 
  *			-solved
+ *
+ *	
+ *	
  */
 
 package do55antos;
