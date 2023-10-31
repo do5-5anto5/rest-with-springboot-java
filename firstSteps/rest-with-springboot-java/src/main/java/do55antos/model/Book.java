@@ -23,7 +23,7 @@ public class Book implements Serializable{
 	private Long id;
 	@Column(name = "title", nullable = false, length = 80)
 	private String title;
-	@Column(name = "author", nullable = false, length = 80)
+	@Column(name = "author", nullable = false, length = 180)
 	private String author;
 	@Column(name = "launch_date", nullable = false)
 	private Date launchDate;

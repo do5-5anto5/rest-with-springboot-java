@@ -1,3 +1,5 @@
-# Rest with Springboot Java
+# REST with Springboot and Java
 
-# Notice that as the application evolves, new commits are in new branches ordered by theme of development
+# Note that the commits were divided and organized by branches, as the API was developed.
+
+#Branch main will always be updated entire project with the latest commit, for a more linear view.
