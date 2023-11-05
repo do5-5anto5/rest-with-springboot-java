@@ -1,4 +1,4 @@
-package do55antos.integrationtests.controller.withjson;
+package do55antos.integrationtests.controller.withxml;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -13,23 +13,24 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(OrderAnnotation.class)
-public class AuthControllerJsonTest extends AbstractIntegrationTest{
+public class AuthControllerXmlTest extends AbstractIntegrationTest{
 
 	private static TokenVO tokenVO;
 	
 	@Test
 	@Order(1)
 	public void testSignin() throws JsonMappingException, JsonProcessingException {
+		
 		AccountCredentialsVO user = new AccountCredentialsVO("jonathan", "admin123");
 		
 		tokenVO = given()
 				.basePath("/auth/signin")
 					.port(TestConfigs.SERVER_PORT)
-					.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.contentType(TestConfigs.CONTENT_TYPE_XML)
 				.body(user)
 					.when()
 				.post()
@@ -46,11 +47,12 @@ public class AuthControllerJsonTest extends AbstractIntegrationTest{
 	@Test
 	@Order(2)
 	public void testRefresh() throws JsonMappingException, JsonProcessingException {
+		AccountCredentialsVO user = new AccountCredentialsVO("jonathan", "admin123");
 		
 		var newTokenVO = given()
 				.basePath("/auth/refresh")
 				.port(TestConfigs.SERVER_PORT)
-				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.contentType(TestConfigs.CONTENT_TYPE_XML)
 					.pathParam("username", tokenVO.getUsername())
 					.header(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer " + tokenVO.getRefreshToken())
 				.when()
