@@ -1,7 +1,6 @@
 package do55antos.integrationtests.vo;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
-import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

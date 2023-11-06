@@ -1,21 +1,10 @@
 /**
  * Improving skills in API RESTful
- * last commit 31, October, 2023 _ 2:15 pm (UTC -3) _ refresh Token
- * 
- * 30/10/2023 - testing authentication in postman
- * 	problems: Error 500,
- * 	fix items:
- * 	fix override methods in User class
- * 			-solved
+ * last commit 5, November, 2023 _ 9:15 pm (UTC -3) _ integration tests
  *
- *	After this, could not access token by tests in Postman, that always returns invalid username/password error.
- *	To fix it, implemented basic logic to create passwords in Startup class (this)
- *		and insert it in user on database
- *			-solved
+ *	branch commit fix
  *
- *	Edit environment variable in Postman, setting variables {{username}} and {{password}}
- *	to dynamic authenticate 
- *			-solved
+ *  a total of 97 tests ok
  */
 
 package do55antos;
