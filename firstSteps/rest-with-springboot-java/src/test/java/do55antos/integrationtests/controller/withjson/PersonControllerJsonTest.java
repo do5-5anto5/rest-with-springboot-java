@@ -1,10 +1,26 @@
 package do55antos.integrationtests.controller.withjson;
 
+import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import do55antos.configs.TestConfigs;
 import do55antos.integrationtests.testcontainers.AbstractIntegrationTest;
 import do55antos.integrationtests.vo.AccountCredentialsVO;
@@ -15,17 +31,6 @@ import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
-
-import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -99,6 +104,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 		assertNotNull(persistedPerson.getLastName());
 		assertNotNull(persistedPerson.getGender());
 		assertNotNull(persistedPerson.getAdress());
+		assertTrue(persistedPerson.getEnabled());
 		
 		assertTrue(persistedPerson.getId() > 0);
 		
@@ -134,6 +140,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 		assertNotNull(persistedPerson.getLastName());
 		assertNotNull(persistedPerson.getGender());
 		assertNotNull(persistedPerson.getAdress());
+		assertTrue(persistedPerson.getEnabled());
 		
 		assertEquals(person.getId(), persistedPerson.getId());
 		
@@ -145,6 +152,40 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 
 	@Test
 	@Order(3)
+	public void testDisablePersonById() throws JsonMappingException, JsonProcessingException {
+
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.pathParam("id", person.getId())
+					.when()
+					.patch("{id}")
+				.then()
+					.statusCode(200)
+						.extract()
+							.body()
+								.asString();
+		
+		PersonVO persistedPerson = objectMapper.readValue(content, PersonVO.class);
+		person = persistedPerson;
+		
+		assertNotNull(persistedPerson);
+		assertNotNull(persistedPerson.getId());
+		assertNotNull(persistedPerson.getFirstName());
+		assertNotNull(persistedPerson.getLastName());
+		assertNotNull(persistedPerson.getGender());
+		assertNotNull(persistedPerson.getAdress());
+		assertFalse(persistedPerson.getEnabled());
+
+		assertEquals(person.getId(), persistedPerson.getId());
+		
+		assertEquals("Nelson", persistedPerson.getFirstName());
+		assertEquals("Piquet Souto Maior", persistedPerson.getLastName());
+		assertEquals("Brasília - DF - Brazil", persistedPerson.getAdress());
+		assertEquals("Male", persistedPerson.getGender());
+	}
+
+	@Test
+	@Order(4)
 	public void testFindById() throws JsonMappingException, JsonProcessingException {
 		mockPerson();
 
@@ -168,6 +209,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 		assertNotNull(persistedPerson.getLastName());
 		assertNotNull(persistedPerson.getGender());
 		assertNotNull(persistedPerson.getAdress());
+		assertFalse(persistedPerson.getEnabled());
 
 		assertEquals(person.getId(), persistedPerson.getId());
 		
@@ -178,7 +220,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	@Order(4)
+	@Order(5)
 	public void testDelete() throws JsonMappingException, JsonProcessingException {
 
 		given().spec(specification)
@@ -191,7 +233,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	@Order(5)
+	@Order(6)
 	public void testFindAll() throws JsonMappingException, JsonProcessingException {
 
 		var content = given().spec(specification)
@@ -213,6 +255,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 		assertNotNull(foundPerson1.getLastName());
 		assertNotNull(foundPerson1.getGender());
 		assertNotNull(foundPerson1.getAdress());
+		assertTrue(foundPerson1.getEnabled());
 
 		assertEquals(1, foundPerson1.getId());
 
@@ -228,6 +271,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 		assertNotNull(foundPerson3.getLastName());
 		assertNotNull(foundPerson3.getGender());
 		assertNotNull(foundPerson3.getAdress());
+		assertTrue(foundPerson3.getEnabled());
 
 		assertEquals(4, foundPerson3.getId());
 
@@ -243,6 +287,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 		assertNotNull(foundPerson5.getLastName());
 		assertNotNull(foundPerson5.getGender());
 		assertNotNull(foundPerson5.getAdress());
+		assertTrue(foundPerson5.getEnabled());
 
 		assertEquals(7, foundPerson5.getId());
 
@@ -253,7 +298,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	@Order(6)
+	@Order(7)
 	public void testFindAllWithoutToken() throws JsonMappingException, JsonProcessingException {
 
 		RequestSpecification specificationWithoutToken = new RequestSpecBuilder()
@@ -277,6 +322,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 		person.setLastName("Piquet");
 		person.setAdress("Brasília - DF - Brazil");
 		person.setGender("Male");
+		person.setEnabled(true);
 	}
 
 }

@@ -109,6 +109,7 @@ public class PersonControllerCorsYamlTest extends AbstractIntegrationTest {
 		assertNotNull(persistedPerson.getLastName());
 		assertNotNull(persistedPerson.getGender());
 		assertNotNull(persistedPerson.getAdress());
+		assertTrue(persistedPerson.getEnabled());
 
 		assertTrue(persistedPerson.getId() > 0);
 
@@ -178,6 +179,7 @@ public class PersonControllerCorsYamlTest extends AbstractIntegrationTest {
 		assertNotNull(persistedPerson.getLastName());
 		assertNotNull(persistedPerson.getGender());
 		assertNotNull(persistedPerson.getAdress());
+		assertTrue(persistedPerson.getEnabled());
 
 		assertTrue(persistedPerson.getId() > 0);
 
@@ -221,6 +223,7 @@ public class PersonControllerCorsYamlTest extends AbstractIntegrationTest {
 		person.setLastName("Stallman");
 		person.setAdress("New York City, New York, US");
 		person.setGender("Male");
+		person.setEnabled(true);
 	}
 
 }

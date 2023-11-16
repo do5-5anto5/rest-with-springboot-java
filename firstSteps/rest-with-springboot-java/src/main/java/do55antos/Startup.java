@@ -1,10 +1,10 @@
 /**
  * Improving skills in API RESTful
- * last commit 5, November, 2023 _ 9:15 pm (UTC -3) _ integration tests
+ * last commit 16, November, 2023 _ 11:00 am (UTC -3) _ integration tests
  *
- *	branch commit fix
+ *	PATCH tests
  *
- *  a total of 97 tests ok
+ *  a total of 100 tests ok
  */
 
 package do55antos;
