@@ -27,6 +27,8 @@ public class Person implements Serializable{
 	private String adress;
 	@Column(nullable = false, length = 6)
 	private String gender;
+	@Column(nullable = false)
+	private Boolean enabled;
 	
 	public Person() {
 	}
@@ -71,9 +73,17 @@ public class Person implements Serializable{
 		this.gender = gender;
 	}
 
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(adress, firstName, gender, id, lastName);
+		return Objects.hash(adress, enabled, firstName, gender, id, lastName);
 	}
 
 	@Override
@@ -85,8 +95,9 @@ public class Person implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Person other = (Person) obj;
-		return Objects.equals(adress, other.adress) && Objects.equals(firstName, other.firstName)
-				&& Objects.equals(gender, other.gender) && Objects.equals(id, other.id)
-				&& Objects.equals(lastName, other.lastName);
+		return Objects.equals(adress, other.adress) && Objects.equals(enabled, other.enabled)
+				&& Objects.equals(firstName, other.firstName) && Objects.equals(gender, other.gender)
+				&& Objects.equals(id, other.id) && Objects.equals(lastName, other.lastName);
 	}
+	
 }

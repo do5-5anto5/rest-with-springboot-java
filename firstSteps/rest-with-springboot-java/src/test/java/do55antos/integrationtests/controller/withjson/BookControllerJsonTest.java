@@ -119,8 +119,6 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 					.body()
 						.asString();
 
-		BookVO updatedBook = objectMapper.readValue(content, BookVO.class);
-
 		assertNotNull(book.getId());
 		assertTrue(book.getId() > 0);
 		assertNotNull(book.getTitle());
