@@ -1,10 +1,9 @@
 /**
  * Improving skills in API RESTful
- * last commit 16, November, 2023 _ 11:00 am (UTC -3) _ integration tests
+ * last commit 25, November, 2023 _ 8:00 pm (UTC -3) _ integration tests
  *
- *	PATCH tests
- *
- *  a total of 100 tests ok
+ *	Paginate Research, with Query Params.
+ *	used Mockaroo to mock objects in database
  */
 
 package do55antos;
