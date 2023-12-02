@@ -1,13 +1,30 @@
 package do55antos.integrationtests.controller.withyaml;
 
+import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+
 import do55antos.configs.TestConfigs;
 import do55antos.data_vo_v1.security.TokenVO;
 import do55antos.integrationtests.controller.withyaml.mapper.YMLMapper;
 import do55antos.integrationtests.testcontainers.AbstractIntegrationTest;
 import do55antos.integrationtests.vo.AccountCredentialsVO;
 import do55antos.integrationtests.vo.BookVO;
+import do55antos.integrationtests.vo.pagedmodels.PagedModelBook;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.EncoderConfig;
 import io.restassured.config.RestAssuredConfig;
@@ -16,20 +33,6 @@ import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -215,7 +218,7 @@ public class BookControllerYamlTest extends AbstractIntegrationTest {
 	@Order(5)
 	public void testFindAll() throws JsonMappingException, JsonProcessingException {
 
-		var content = given().spec(specification)
+		var wrapper = given().spec(specification)
 				.config(
 						RestAssuredConfig
 								.config()
@@ -231,9 +234,9 @@ public class BookControllerYamlTest extends AbstractIntegrationTest {
 				.statusCode(200)
 					.extract()
 						.body()
-							.as(BookVO[].class, objectMapper);
+							.as(PagedModelBook.class, objectMapper);
 
-		List<BookVO> books = Arrays.asList(content);
+		var books = wrapper.getContent();
 
 		BookVO foundBookOne = books.get(0);
 
@@ -242,20 +245,24 @@ public class BookControllerYamlTest extends AbstractIntegrationTest {
 		assertNotNull(foundBookOne.getAuthor());
 		assertNotNull(foundBookOne.getPrice());
 		assertTrue(foundBookOne.getId() > 0);
-		assertEquals("Working effectively with legacy code", foundBookOne.getTitle());
-		assertEquals("Michael C. Feathers", foundBookOne.getAuthor());
-		assertEquals(Double.valueOf(49.00), foundBookOne.getPrice().doubleValue());
-
+		
+		assertEquals(372, foundBookOne.getId());
+		assertEquals("Conflagration (Enjô)", foundBookOne.getTitle());
+		assertEquals("Aaren Burness", foundBookOne.getAuthor());
+		assertEquals(Double.valueOf(77.85), foundBookOne.getPrice().doubleValue());
+		
 		BookVO foundBookFive = books.get(4);
-
+		
 		assertNotNull(foundBookFive.getId());
 		assertNotNull(foundBookFive.getTitle());
 		assertNotNull(foundBookFive.getAuthor());
 		assertNotNull(foundBookFive.getPrice());
 		assertTrue(foundBookFive.getId() > 0);
-		assertEquals("Code complete", foundBookFive.getTitle());
-		assertEquals("Steve McConnell", foundBookFive.getAuthor());
-		assertEquals(Double.valueOf(58.0), foundBookFive.getPrice().doubleValue());
+		
+		assertEquals(534, foundBookFive.getId());
+		assertEquals("Blazing Saddles", foundBookFive.getTitle());
+		assertEquals("Abra Bennitt", foundBookFive.getAuthor());
+		assertEquals(Double.valueOf(69.99), foundBookFive.getPrice().doubleValue());
 	}
 
 	@Test

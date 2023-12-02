@@ -1,20 +1,11 @@
 package do55antos.integrationtests.controller.withxml;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import do55antos.configs.TestConfigs;
-import do55antos.data_vo_v1.security.TokenVO;
-import do55antos.integrationtests.testcontainers.AbstractIntegrationTest;
-import do55antos.integrationtests.vo.AccountCredentialsVO;
-import do55antos.integrationtests.vo.PersonVO;
-import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.filter.log.LogDetail;
-import io.restassured.filter.log.RequestLoggingFilter;
-import io.restassured.filter.log.ResponseLoggingFilter;
-import io.restassured.specification.RequestSpecification;
+import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -22,10 +13,22 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
-import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.*;
+import do55antos.configs.TestConfigs;
+import do55antos.data_vo_v1.security.TokenVO;
+import do55antos.integrationtests.testcontainers.AbstractIntegrationTest;
+import do55antos.integrationtests.vo.AccountCredentialsVO;
+import do55antos.integrationtests.vo.PersonVO;
+import do55antos.integrationtests.vo.pagedmodels.PagedModelPerson;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.filter.log.LogDetail;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
+import io.restassured.specification.RequestSpecification;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -239,6 +242,7 @@ public void testFindById() throws JsonMappingException, JsonProcessingException 
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_XML)
 				.accept(TestConfigs.CONTENT_TYPE_XML)
+				.queryParams("page", 3, "size", 10, "dicrection", "asc")
 					.when()
 					.get()
 				.then()
@@ -247,7 +251,8 @@ public void testFindById() throws JsonMappingException, JsonProcessingException 
 						.body()
 							.asString();
 
-		List<PersonVO> people = objectMapper.readValue(content, new TypeReference<List<PersonVO>>() {});
+		PagedModelPerson wrapper = objectMapper.readValue(content, PagedModelPerson.class);
+		var people = wrapper.getContent();
 
 		PersonVO foundPerson1 = people.get(0);
 
@@ -258,12 +263,12 @@ public void testFindById() throws JsonMappingException, JsonProcessingException 
 		assertNotNull(foundPerson1.getAdress());
 		assertTrue(foundPerson1.getEnabled());
 
-		assertEquals(1, foundPerson1.getId());
+		assertEquals(536, foundPerson1.getId());
 
-		assertEquals("Xuxa", foundPerson1.getFirstName());
-		assertEquals("Meneghel", foundPerson1.getLastName());
-		assertEquals("Rio de Janeiro", foundPerson1.getAdress());
-		assertEquals("Female", foundPerson1.getGender());
+		assertEquals("Amby", foundPerson1.getFirstName());
+		assertEquals("Oglethorpe", foundPerson1.getLastName());
+		assertEquals("4293 Rutledge Circle", foundPerson1.getAdress());
+		assertEquals("Male", foundPerson1.getGender());
 
 		PersonVO foundPerson3 = people.get(2);
 
@@ -272,13 +277,13 @@ public void testFindById() throws JsonMappingException, JsonProcessingException 
 		assertNotNull(foundPerson3.getLastName());
 		assertNotNull(foundPerson3.getGender());
 		assertNotNull(foundPerson3.getAdress());
-		assertTrue(foundPerson3.getEnabled());
+		assertFalse(foundPerson3.getEnabled());
 
-		assertEquals(4, foundPerson3.getId());
+		assertEquals(251, foundPerson3.getId());
 
-		assertEquals("Indira", foundPerson3.getFirstName());
-		assertEquals("Ghandi", foundPerson3.getLastName());
-		assertEquals("Porbandar - India", foundPerson3.getAdress());
+		assertEquals("Amii", foundPerson3.getFirstName());
+		assertEquals("Mantrip", foundPerson3.getLastName());
+		assertEquals("04 Pierstorff Place", foundPerson3.getAdress());
 		assertEquals("Female", foundPerson3.getGender());
 
 		PersonVO foundPerson5 = people.get(4);
@@ -290,12 +295,12 @@ public void testFindById() throws JsonMappingException, JsonProcessingException 
 		assertNotNull(foundPerson5.getAdress());
 		assertTrue(foundPerson5.getEnabled());
 
-		assertEquals(7, foundPerson5.getId());
+		assertEquals(101, foundPerson5.getId());
 
-		assertEquals("Muhamad", foundPerson5.getFirstName());
-		assertEquals("Ali", foundPerson5.getLastName());
-		assertEquals("Kentucky - US", foundPerson5.getAdress());
-		assertEquals("Male", foundPerson5.getGender());
+		assertEquals("Amitie", foundPerson5.getFirstName());
+		assertEquals("Fullager", foundPerson5.getLastName());
+		assertEquals("61882 Cottonwood Court", foundPerson5.getAdress());
+		assertEquals("Female", foundPerson5.getGender());
 	}
 
 	@Test

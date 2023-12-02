@@ -1,20 +1,13 @@
 package do55antos.integrationtests.controller.withjson;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import do55antos.configs.TestConfigs;
-import do55antos.integrationtests.testcontainers.AbstractIntegrationTest;
-import do55antos.integrationtests.vo.AccountCredentialsVO;
-import do55antos.integrationtests.vo.BookVO;
-import do55antos.integrationtests.vo.TokenVO;
-import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.filter.log.LogDetail;
-import io.restassured.filter.log.RequestLoggingFilter;
-import io.restassured.filter.log.ResponseLoggingFilter;
-import io.restassured.specification.RequestSpecification;
+import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -22,12 +15,23 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.*;
+import do55antos.configs.TestConfigs;
+import do55antos.integrationtests.testcontainers.AbstractIntegrationTest;
+import do55antos.integrationtests.vo.AccountCredentialsVO;
+import do55antos.integrationtests.vo.BookVO;
+import do55antos.integrationtests.vo.TokenVO;
+import do55antos.integrationtests.vo.wrappers.WrapperBookVO;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.filter.log.LogDetail;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
+import io.restassured.specification.RequestSpecification;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -118,15 +122,17 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 					.extract()
 					.body()
 						.asString();
+		
+		 BookVO bookUpdated = objectMapper.readValue(content, BookVO.class);
 
-		assertNotNull(book.getId());
-		assertTrue(book.getId() > 0);
-		assertNotNull(book.getTitle());
-		assertNotNull(book.getAuthor());
-		assertNotNull(book.getPrice());
-		assertEquals("Docker Deep Dive - Updated", book.getTitle());
-		assertEquals("Nigel Poulton", book.getAuthor());
-		assertEquals(BigDecimal.valueOf(55.99), book.getPrice());
+		assertNotNull(bookUpdated.getId());
+		assertTrue(bookUpdated.getId() > 0);
+		assertNotNull(bookUpdated.getTitle());
+		assertNotNull(bookUpdated.getAuthor());
+		assertNotNull(bookUpdated.getPrice());
+		assertEquals("Docker Deep Dive - Updated", bookUpdated.getTitle());
+		assertEquals("Nigel Poulton", bookUpdated.getAuthor());
+		assertEquals(BigDecimal.valueOf(55.99), bookUpdated.getPrice());
 	}
 
 	@Test
@@ -185,7 +191,8 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 					.body()
 						.asString();
 
-		List<BookVO> books = objectMapper.readValue(content, new TypeReference<List<BookVO>>() {});
+		WrapperBookVO wrapper = objectMapper.readValue(content, WrapperBookVO.class);
+		var books = wrapper.getEmbedded().getBooks();
 
 		BookVO foundBookOne = books.get(0);
 
@@ -194,20 +201,24 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 		assertNotNull(foundBookOne.getAuthor());
 		assertNotNull(foundBookOne.getPrice());
 		assertTrue(foundBookOne.getId() > 0);
-		assertEquals("Working effectively with legacy code", foundBookOne.getTitle());
-		assertEquals("Michael C. Feathers", foundBookOne.getAuthor());
-		assertEquals(Double.valueOf(49.00), foundBookOne.getPrice().doubleValue());
-
+		
+		assertEquals(372, foundBookOne.getId());
+		assertEquals("Conflagration (Enjô)", foundBookOne.getTitle());
+		assertEquals("Aaren Burness", foundBookOne.getAuthor());
+		assertEquals(Double.valueOf(77.85), foundBookOne.getPrice().doubleValue());
+		
 		BookVO foundBookFive = books.get(4);
-
+		
 		assertNotNull(foundBookFive.getId());
 		assertNotNull(foundBookFive.getTitle());
 		assertNotNull(foundBookFive.getAuthor());
 		assertNotNull(foundBookFive.getPrice());
 		assertTrue(foundBookFive.getId() > 0);
-		assertEquals("Code complete", foundBookFive.getTitle());
-		assertEquals("Steve McConnell", foundBookFive.getAuthor());
-		assertEquals(Double.valueOf(58.0), foundBookFive.getPrice().doubleValue());
+		
+		assertEquals(534, foundBookFive.getId());
+		assertEquals("Blazing Saddles", foundBookFive.getTitle());
+		assertEquals("Abra Bennitt", foundBookFive.getAuthor());
+		assertEquals(Double.valueOf(69.99), foundBookFive.getPrice().doubleValue());
 	}
 
 	@Test
