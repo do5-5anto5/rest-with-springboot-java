@@ -183,6 +183,7 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.queryParams("page", 3, "size", 10, "direction", "asc")
 					.when()
 					.get()
 				.then()
@@ -194,6 +195,7 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 		WrapperBookVO wrapper = objectMapper.readValue(content, WrapperBookVO.class);
 		var books = wrapper.getEmbedded().getBooks();
 
+
 		BookVO foundBookOne = books.get(0);
 
 		assertNotNull(foundBookOne.getId());
@@ -202,10 +204,10 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 		assertNotNull(foundBookOne.getPrice());
 		assertTrue(foundBookOne.getId() > 0);
 		
-		assertEquals(372, foundBookOne.getId());
-		assertEquals("Conflagration (Enjô)", foundBookOne.getTitle());
-		assertEquals("Aaren Burness", foundBookOne.getAuthor());
-		assertEquals(Double.valueOf(77.85), foundBookOne.getPrice().doubleValue());
+		assertEquals(180, foundBookOne.getId());
+		assertEquals("Chicken Run", foundBookOne.getTitle());
+		assertEquals("Ambur Exer", foundBookOne.getAuthor());
+		assertEquals(Double.valueOf(79.53), foundBookOne.getPrice().doubleValue());
 		
 		BookVO foundBookFive = books.get(4);
 		
@@ -215,14 +217,48 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 		assertNotNull(foundBookFive.getPrice());
 		assertTrue(foundBookFive.getId() > 0);
 		
-		assertEquals(534, foundBookFive.getId());
-		assertEquals("Blazing Saddles", foundBookFive.getTitle());
-		assertEquals("Abra Bennitt", foundBookFive.getAuthor());
-		assertEquals(Double.valueOf(69.99), foundBookFive.getPrice().doubleValue());
+		assertEquals(624, foundBookFive.getId());
+		assertEquals("True Heart Susie", foundBookFive.getTitle());
+		assertEquals("Anett Moores", foundBookFive.getAuthor());
+		assertEquals(Double.valueOf(82.72), foundBookFive.getPrice().doubleValue());
+	}
+	
+	@Test
+	@Order(6)
+	public void testFindByAuthor() throws JsonMappingException, JsonProcessingException {
+		
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.pathParam("author", "C.")
+				.queryParams("page", 0, "size", 6, "direction", "asc")
+					.when()
+					.get("/findBookByAuthor/{author}")
+				.then()
+					.statusCode(200)
+					.extract()
+						.body()
+					.		asString();
+		
+		WrapperBookVO wrapper = objectMapper.readValue(content, WrapperBookVO.class);
+		var books = wrapper.getEmbedded().getBooks();
+		
+		
+		BookVO foundBookOne = books.get(0);
+		
+		assertNotNull(foundBookOne.getId());
+		assertNotNull(foundBookOne.getTitle());
+		assertNotNull(foundBookOne.getAuthor());
+		assertNotNull(foundBookOne.getPrice());
+		assertTrue(foundBookOne.getId() > 0);
+		
+		assertEquals(1, foundBookOne.getId());
+		assertEquals("Working effectively with legacy code", foundBookOne.getTitle());
+		assertEquals("Michael C. Feathers", foundBookOne.getAuthor());
+		assertEquals(Double.valueOf(49.00), foundBookOne.getPrice().doubleValue());
 	}
 
 	@Test
-	@Order(6)
+	@Order(7)
 	public void testFindAllWithoutToken() throws JsonMappingException, JsonProcessingException {
 
 		RequestSpecification specificationWithoutToken = new RequestSpecBuilder()

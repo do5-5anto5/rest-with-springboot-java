@@ -229,9 +229,43 @@ public class BookControllerXmlTest extends AbstractIntegrationTest {
 		assertEquals("Anett Moores", foundBookFive.getAuthor());
 		assertEquals(Double.valueOf(82.72), foundBookFive.getPrice().doubleValue());
 	}
+	
+	@Test
+	@Order(5)
+	public void testFindByAuthor() throws JsonMappingException, JsonProcessingException {
+		
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_XML)
+				.accept(TestConfigs.CONTENT_TYPE_XML)
+					.pathParam("author", "C.")
+					.queryParams("page", 0, "size", 6, "description", "asc")
+					.when()
+				.get("/findBookByAuthor/{author}")
+				.then()
+					.statusCode(200)
+					.extract()
+						.body()
+							.asString();
+		
+		PagedModelBook wrapper = objectMapper.readValue(content, PagedModelBook.class);
+		var books = wrapper.getContent();
+		
+		BookVO foundBookOne = books.get(0);
+		
+		assertNotNull(foundBookOne.getId());
+		assertNotNull(foundBookOne.getTitle());
+		assertNotNull(foundBookOne.getAuthor());
+		assertNotNull(foundBookOne.getPrice());
+		assertTrue(foundBookOne.getId() > 0);
+		
+		assertEquals(1, foundBookOne.getId());
+		assertEquals("Working effectively with legacy code", foundBookOne.getTitle());
+		assertEquals("Michael C. Feathers", foundBookOne.getAuthor());
+		assertEquals(Double.valueOf(49.00), foundBookOne.getPrice().doubleValue());
+	}
 
 	@Test
-	@Order(6)
+	@Order(7)
 	public void testFindAllWithoutToken() throws JsonMappingException, JsonProcessingException {
 
 		RequestSpecification specificationWithoutToken = new RequestSpecBuilder()

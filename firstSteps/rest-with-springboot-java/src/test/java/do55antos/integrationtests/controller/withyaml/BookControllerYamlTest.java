@@ -228,6 +228,8 @@ public class BookControllerYamlTest extends AbstractIntegrationTest {
 												ContentType.TEXT)))
 				.contentType(TestConfigs.CONTENT_TYPE_YML)
 				.accept(TestConfigs.CONTENT_TYPE_YML)
+				.pathParams("author", "C.")
+				.queryParams("page", 3, "size", 10, "direction", "asc")
 					.when()
 					.get()
 				.then()
@@ -240,6 +242,45 @@ public class BookControllerYamlTest extends AbstractIntegrationTest {
 
 		BookVO foundBookOne = books.get(0);
 
+		assertNotNull(foundBookOne.getId());
+		assertNotNull(foundBookOne.getTitle());
+		assertNotNull(foundBookOne.getAuthor());
+		assertNotNull(foundBookOne.getPrice());
+		assertTrue(foundBookOne.getId() > 0);
+		
+		assertEquals(1, foundBookOne.getId());
+		assertEquals("Working effectively with legacy code", foundBookOne.getTitle());
+		assertEquals("Michael C. Feathers", foundBookOne.getAuthor());
+		assertEquals(Double.valueOf(49.00), foundBookOne.getPrice().doubleValue());
+	}
+	
+	@Test
+	@Order(6)
+	public void testFindByAuthor() throws JsonMappingException, JsonProcessingException {
+		
+		var wrapper = given().spec(specification)
+				.config(
+						RestAssuredConfig
+						.config()
+						.encoderConfig(EncoderConfig.encoderConfig()
+								.encodeContentTypeAs(
+										TestConfigs.CONTENT_TYPE_YML,
+										ContentType.TEXT)))
+				.contentType(TestConfigs.CONTENT_TYPE_YML)
+				.accept(TestConfigs.CONTENT_TYPE_YML)
+					.pathParams("author", "C.")
+					.when()
+					.get()
+				.then()
+					.statusCode(200)
+					.extract()
+						.body()
+							.as(PagedModelBook.class, objectMapper);
+		
+		var books = wrapper.getContent();
+		
+		BookVO foundBookOne = books.get(0);
+		
 		assertNotNull(foundBookOne.getId());
 		assertNotNull(foundBookOne.getTitle());
 		assertNotNull(foundBookOne.getAuthor());
@@ -266,7 +307,7 @@ public class BookControllerYamlTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	@Order(6)
+	@Order(7)
 	public void testFindAllWithoutToken() throws JsonMappingException, JsonProcessingException {
 
 		RequestSpecification specificationWithoutToken = new RequestSpecBuilder()
