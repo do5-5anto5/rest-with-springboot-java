@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -129,53 +128,6 @@ class BookServiceTest {
 
 		service.delete(1L);
 	}
-
-//	@Test
-//	void testFindAll() {
-//		List<Book> list = input.mockEntityList();
-//		
-//		when(repository.findAll()).thenReturn(list);
-//
-//		var books = service.findAll();
-//		
-//		assertNotNull(books);
-//		assertEquals(14, books.size());
-//		
-//		var bookOne = books.get(1);
-//		assertNotNull(bookOne);
-//		assertNotNull(bookOne.getKey());
-//		assertNotNull(bookOne.getLinks());
-//
-//		assertTrue(bookOne.toString().contains("links: [</api/book/v1/1>;rel=\"self\"]"));
-//		assertEquals("Title Test1", bookOne.getTitle());
-//		assertEquals("Author Test1", bookOne.getAuthor());
-//		assertNotNull(bookOne.getLaunchDate());
-//		assertEquals(new BigDecimal(1), bookOne.getPrice());
-//		
-//		var bookFour = books.get(4);
-//		
-//		assertNotNull(bookFour);
-//		assertNotNull(bookFour.getKey());
-//		assertNotNull(bookFour.getLinks());
-//
-//		assertTrue(bookFour.toString().contains("links: [</api/book/v1/4>;rel=\"self\"]"));
-//		assertEquals("Title Test4", bookFour.getTitle());
-//		assertEquals("Author Test4", bookFour.getAuthor());
-//		assertNotNull(bookFour.getLaunchDate());
-//		assertEquals(new BigDecimal(4), bookFour.getPrice());
-//		
-//		var bookSeven = books.get(7);
-//		
-//		assertNotNull(bookSeven);
-//		assertNotNull(bookSeven.getKey());
-//		assertNotNull(bookSeven.getLinks());
-//
-//		assertTrue(bookSeven.toString().contains("links: [</api/book/v1/7>;rel=\"self\"]"));
-//		assertEquals("Title Test7", bookSeven.getTitle());
-//		assertEquals("Author Test7", bookSeven.getAuthor());
-//		assertNotNull(bookSeven.getLaunchDate());
-//		assertEquals(new BigDecimal(7), bookSeven.getPrice());
-//	}
 	
 	void testVOAssertions(BookVO result) {
 		

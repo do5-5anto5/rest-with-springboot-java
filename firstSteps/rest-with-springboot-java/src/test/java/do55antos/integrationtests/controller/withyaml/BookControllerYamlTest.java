@@ -228,7 +228,6 @@ public class BookControllerYamlTest extends AbstractIntegrationTest {
 												ContentType.TEXT)))
 				.contentType(TestConfigs.CONTENT_TYPE_YML)
 				.accept(TestConfigs.CONTENT_TYPE_YML)
-				.pathParams("author", "C.")
 				.queryParams("page", 3, "size", 10, "direction", "asc")
 					.when()
 					.get()
@@ -248,10 +247,23 @@ public class BookControllerYamlTest extends AbstractIntegrationTest {
 		assertNotNull(foundBookOne.getPrice());
 		assertTrue(foundBookOne.getId() > 0);
 		
-		assertEquals(1, foundBookOne.getId());
-		assertEquals("Working effectively with legacy code", foundBookOne.getTitle());
-		assertEquals("Michael C. Feathers", foundBookOne.getAuthor());
-		assertEquals(Double.valueOf(49.00), foundBookOne.getPrice().doubleValue());
+		assertEquals(180, foundBookOne.getId());
+		assertEquals("Chicken Run", foundBookOne.getTitle());
+		assertEquals("Ambur Exer", foundBookOne.getAuthor());
+		assertEquals(Double.valueOf(79.53), foundBookOne.getPrice().doubleValue());
+		
+		BookVO foundBookFive = books.get(4);
+		
+		assertNotNull(foundBookFive.getId());
+		assertNotNull(foundBookFive.getTitle());
+		assertNotNull(foundBookFive.getAuthor());
+		assertNotNull(foundBookFive.getPrice());
+		assertTrue(foundBookFive.getId() > 0);
+		
+		assertEquals(624, foundBookFive.getId());
+		assertEquals("True Heart Susie", foundBookFive.getTitle());
+		assertEquals("Anett Moores", foundBookFive.getAuthor());
+		assertEquals(Double.valueOf(82.72), foundBookFive.getPrice().doubleValue());
 	}
 	
 	@Test
@@ -270,7 +282,7 @@ public class BookControllerYamlTest extends AbstractIntegrationTest {
 				.accept(TestConfigs.CONTENT_TYPE_YML)
 					.pathParams("author", "C.")
 					.when()
-					.get()
+					.get("/findBookByAuthor/{author}")
 				.then()
 					.statusCode(200)
 					.extract()
@@ -287,23 +299,10 @@ public class BookControllerYamlTest extends AbstractIntegrationTest {
 		assertNotNull(foundBookOne.getPrice());
 		assertTrue(foundBookOne.getId() > 0);
 		
-		assertEquals(372, foundBookOne.getId());
-		assertEquals("Conflagration (Enjô)", foundBookOne.getTitle());
-		assertEquals("Aaren Burness", foundBookOne.getAuthor());
-		assertEquals(Double.valueOf(77.85), foundBookOne.getPrice().doubleValue());
-		
-		BookVO foundBookFive = books.get(4);
-		
-		assertNotNull(foundBookFive.getId());
-		assertNotNull(foundBookFive.getTitle());
-		assertNotNull(foundBookFive.getAuthor());
-		assertNotNull(foundBookFive.getPrice());
-		assertTrue(foundBookFive.getId() > 0);
-		
-		assertEquals(534, foundBookFive.getId());
-		assertEquals("Blazing Saddles", foundBookFive.getTitle());
-		assertEquals("Abra Bennitt", foundBookFive.getAuthor());
-		assertEquals(Double.valueOf(69.99), foundBookFive.getPrice().doubleValue());
+		assertEquals(1, foundBookOne.getId());
+		assertEquals("Working effectively with legacy code", foundBookOne.getTitle());
+		assertEquals("Michael C. Feathers", foundBookOne.getAuthor());
+		assertEquals(Double.valueOf(49.00), foundBookOne.getPrice().doubleValue());
 	}
 
 	@Test
@@ -332,6 +331,45 @@ public class BookControllerYamlTest extends AbstractIntegrationTest {
 				.then()
 					.statusCode(403);
 	}
+
+	@Test
+	@Order(9)
+	public void testHATEOAS() throws JsonMappingException, JsonProcessingException {
+
+		var unthreatedContent = given().spec(specification)
+				.config(
+						RestAssuredConfig
+								.config()
+								.encoderConfig(EncoderConfig.encoderConfig()
+										.encodeContentTypeAs(
+												TestConfigs.CONTENT_TYPE_YML,
+												ContentType.TEXT)))
+				.contentType(TestConfigs.CONTENT_TYPE_YML)
+				.accept(TestConfigs.CONTENT_TYPE_YML)
+				.queryParams("page", 3, "size", 10, "dicrection", "asc")
+					.when()
+					.get()
+				.then()
+				.statusCode(200)
+					.extract()
+						.body()
+							.asString();
+		
+			var content = unthreatedContent.replace("\n", "").replace("\r", "");
+		
+
+		assertTrue(content.contains("rel: \"self\"    href: \"http://localhost:8888/api/book/v1/58\""));
+		assertTrue(content.contains("rel: \"self\"    href: \"http://localhost:8888/api/book/v1/469\""));
+		assertTrue(content.contains("rel: \"self\"    href: \"http://localhost:8888/api/book/v1/712\""));
+		
+		assertTrue(content.contains("rel: \"first\"  href: \"http://localhost:8888/api/book/v1?limit=12&direction=asc&page=0&size=12&sort=author,asc\""));
+		assertTrue(content.contains("rel: \"prev\"  href: \"http://localhost:8888/api/book/v1?limit=12&direction=asc&page=2&size=12&sort=author,asc\""));
+		assertTrue(content.contains("rel: \"self\"  href: \"http://localhost:8888/api/book/v1?page=3&limit=12&direction=asc\""));
+		assertTrue(content.contains("rel: \"next\"  href: \"http://localhost:8888/api/book/v1?limit=12&direction=asc&page=4&size=12&sort=author,asc\""));
+		assertTrue(content.contains("rel: \"last\"  href: \"http://localhost:8888/api/book/v1?limit=12&direction=asc&page=84&size=12&sort=author,asc\""));
+		
+		assertTrue(content.contains("page:  size: 12  totalElements: 1018  totalPages: 85  number: 3"));
+		}	
 
 	private void mockBook() {
 		book.setTitle("Docker Deep Dive");

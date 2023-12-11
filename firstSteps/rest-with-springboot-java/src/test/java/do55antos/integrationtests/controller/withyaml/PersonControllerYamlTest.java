@@ -416,6 +416,45 @@ public class PersonControllerYamlTest extends AbstractIntegrationTest {
 				.then()
 					.statusCode(403);
 	}
+
+	@Test
+	@Order(9)
+	public void testHATEOAS() throws JsonMappingException, JsonProcessingException {
+
+		var unthreatedContent = given().spec(specification)
+				.config(
+						RestAssuredConfig
+								.config()
+								.encoderConfig(EncoderConfig.encoderConfig()
+										.encodeContentTypeAs(
+												TestConfigs.CONTENT_TYPE_YML,
+												ContentType.TEXT)))
+				.contentType(TestConfigs.CONTENT_TYPE_YML)
+				.accept(TestConfigs.CONTENT_TYPE_YML)
+				.queryParams("page", 3, "size", 10, "dicrection", "asc")
+					.when()
+					.get()
+				.then()
+				.statusCode(200)
+					.extract()
+						.body()
+							.asString();
+		
+			var content = unthreatedContent.replace("\n", "").replace("\r", "");
+		
+
+		assertTrue(content.contains("rel: \"self\"    href: \"http://localhost:8888/api/person/v1/548\""));
+		assertTrue(content.contains("rel: \"self\"    href: \"http://localhost:8888/api/person/v1/101\""));
+		assertTrue(content.contains("rel: \"self\"    href: \"http://localhost:8888/api/person/v1/366\""));
+		
+		assertTrue(content.contains("rel: \"first\"  href: \"http://localhost:8888/api/person/v1?limit=12&direction=asc&page=0&size=12&sort=firstName,asc\""));
+		assertTrue(content.contains("rel: \"prev\"  href: \"http://localhost:8888/api/person/v1?limit=12&direction=asc&page=2&size=12&sort=firstName,asc\""));
+		assertTrue(content.contains("rel: \"self\"  href: \"http://localhost:8888/api/person/v1?page=3&limit=12&direction=asc\""));
+		assertTrue(content.contains("rel: \"next\"  href: \"http://localhost:8888/api/person/v1?limit=12&direction=asc&page=4&size=12&sort=firstName,asc\""));
+		assertTrue(content.contains("rel: \"last\"  href: \"http://localhost:8888/api/person/v1?limit=12&direction=asc&page=84&size=12&sort=firstName,asc\""));
+		
+		assertTrue(content.contains("page:  size: 12  totalElements: 1010  totalPages: 85  number: 3"));
+		}	
 	
 	private void mockPerson() {
 
