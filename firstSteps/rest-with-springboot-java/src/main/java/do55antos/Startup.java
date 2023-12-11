@@ -1,10 +1,8 @@
 /**
  * Improving skills in API RESTful
- * last commit 16, November, 2023 _ 11:00 am (UTC -3) _ integration tests
- *
- *	PATCH tests
- *
- *  a total of 100 tests ok
+ * last commit 10, December, 2023 _ 22:00 pm (UTC -3) 
+ * 
+ * fix unit tests, implement HATEOAS tests with JSON, XML and YAML
  */
 
 package do55antos;

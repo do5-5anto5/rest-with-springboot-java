@@ -1,20 +1,13 @@
 package do55antos.integrationtests.controller.withxml;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import do55antos.configs.TestConfigs;
-import do55antos.data_vo_v1.security.TokenVO;
-import do55antos.integrationtests.testcontainers.AbstractIntegrationTest;
-import do55antos.integrationtests.vo.AccountCredentialsVO;
-import do55antos.integrationtests.vo.BookVO;
-import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.filter.log.LogDetail;
-import io.restassured.filter.log.RequestLoggingFilter;
-import io.restassured.filter.log.ResponseLoggingFilter;
-import io.restassured.specification.RequestSpecification;
+import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -22,13 +15,23 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Date;
-import java.util.List;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
-import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.*;
+import do55antos.configs.TestConfigs;
+import do55antos.data_vo_v1.security.TokenVO;
+import do55antos.integrationtests.testcontainers.AbstractIntegrationTest;
+import do55antos.integrationtests.vo.AccountCredentialsVO;
+import do55antos.integrationtests.vo.BookVO;
+import do55antos.integrationtests.vo.pagedmodels.PagedModelBook;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.filter.log.LogDetail;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
+import io.restassured.specification.RequestSpecification;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -188,6 +191,7 @@ public class BookControllerXmlTest extends AbstractIntegrationTest {
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_XML)
 				.accept(TestConfigs.CONTENT_TYPE_XML)
+				.queryParams("page", 3, "size", 10, "description", "asc")
 					.when()
 					.get()
 				.then()
@@ -196,7 +200,8 @@ public class BookControllerXmlTest extends AbstractIntegrationTest {
 							.body()
 								.asString();
 
-		List<BookVO> books = objectMapper.readValue(content, new TypeReference<List<BookVO>>() {});
+		PagedModelBook wrapper = objectMapper.readValue(content, PagedModelBook.class);
+		var books = wrapper.getContent();
 
 		BookVO foundBookOne = books.get(0);
 
@@ -205,24 +210,62 @@ public class BookControllerXmlTest extends AbstractIntegrationTest {
 		assertNotNull(foundBookOne.getAuthor());
 		assertNotNull(foundBookOne.getPrice());
 		assertTrue(foundBookOne.getId() > 0);
-		assertEquals("Working effectively with legacy code", foundBookOne.getTitle());
-		assertEquals("Michael C. Feathers", foundBookOne.getAuthor());
-		assertEquals(Double.valueOf(49.00), foundBookOne.getPrice().doubleValue());
-
+		
+		assertEquals(180, foundBookOne.getId());
+		assertEquals("Chicken Run", foundBookOne.getTitle());
+		assertEquals("Ambur Exer", foundBookOne.getAuthor());
+		assertEquals(Double.valueOf(79.53), foundBookOne.getPrice().doubleValue());
+		
 		BookVO foundBookFive = books.get(4);
-
+		
 		assertNotNull(foundBookFive.getId());
 		assertNotNull(foundBookFive.getTitle());
 		assertNotNull(foundBookFive.getAuthor());
 		assertNotNull(foundBookFive.getPrice());
 		assertTrue(foundBookFive.getId() > 0);
-		assertEquals("Code complete", foundBookFive.getTitle());
-		assertEquals("Steve McConnell", foundBookFive.getAuthor());
-		assertEquals(Double.valueOf(58.0), foundBookFive.getPrice().doubleValue());
+		
+		assertEquals(624, foundBookFive.getId());
+		assertEquals("True Heart Susie", foundBookFive.getTitle());
+		assertEquals("Anett Moores", foundBookFive.getAuthor());
+		assertEquals(Double.valueOf(82.72), foundBookFive.getPrice().doubleValue());
+	}
+	
+	@Test
+	@Order(5)
+	public void testFindByAuthor() throws JsonMappingException, JsonProcessingException {
+		
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_XML)
+				.accept(TestConfigs.CONTENT_TYPE_XML)
+					.pathParam("author", "C.")
+					.queryParams("page", 0, "size", 6, "description", "asc")
+					.when()
+				.get("/findBookByAuthor/{author}")
+				.then()
+					.statusCode(200)
+					.extract()
+						.body()
+							.asString();
+		
+		PagedModelBook wrapper = objectMapper.readValue(content, PagedModelBook.class);
+		var books = wrapper.getContent();
+		
+		BookVO foundBookOne = books.get(0);
+		
+		assertNotNull(foundBookOne.getId());
+		assertNotNull(foundBookOne.getTitle());
+		assertNotNull(foundBookOne.getAuthor());
+		assertNotNull(foundBookOne.getPrice());
+		assertTrue(foundBookOne.getId() > 0);
+		
+		assertEquals(1, foundBookOne.getId());
+		assertEquals("Working effectively with legacy code", foundBookOne.getTitle());
+		assertEquals("Michael C. Feathers", foundBookOne.getAuthor());
+		assertEquals(Double.valueOf(49.00), foundBookOne.getPrice().doubleValue());
 	}
 
 	@Test
-	@Order(6)
+	@Order(7)
 	public void testFindAllWithoutToken() throws JsonMappingException, JsonProcessingException {
 
 		RequestSpecification specificationWithoutToken = new RequestSpecBuilder()
@@ -241,6 +284,35 @@ public class BookControllerXmlTest extends AbstractIntegrationTest {
 					.statusCode(403);
 	}
 
+	@Test
+	@Order(8)
+	public void testHATEOAS() throws JsonMappingException, JsonProcessingException {
+
+		var content = given().spec(specification)
+				.contentType(TestConfigs.CONTENT_TYPE_XML)
+				.accept(TestConfigs.CONTENT_TYPE_XML)
+				.queryParams("page", 3, "size", 10, "dicrection", "asc")
+					.when()
+					.get()
+				.then()
+				.statusCode(200)
+					.extract()
+						.body()
+							.asString();
+
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/book/v1/58</href></links>"));
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/book/v1/469</href></links>"));
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/book/v1/712</href></links>"));
+		
+		assertTrue(content.contains("<links><rel>first</rel><href>http://localhost:8888/api/book/v1?limit=12&amp;direction=asc&amp;page=0&amp;size=12&amp;sort=author,asc</href></links>"));
+		assertTrue(content.contains("<links><rel>prev</rel><href>http://localhost:8888/api/book/v1?limit=12&amp;direction=asc&amp;page=2&amp;size=12&amp;sort=author,asc</href></links>"));
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/book/v1?page=3&amp;limit=12&amp;direction=asc</href></links>"));
+		assertTrue(content.contains("<links><rel>next</rel><href>http://localhost:8888/api/book/v1?limit=12&amp;direction=asc&amp;page=4&amp;size=12&amp;sort=author,asc</href></links>"));
+		assertTrue(content.contains("<links><rel>last</rel><href>http://localhost:8888/api/book/v1?limit=12&amp;direction=asc&amp;page=84&amp;size=12&amp;sort=author,asc</href></links>"));
+		
+		assertTrue(content.contains("<page><size>12</size><totalElements>1018</totalElements><totalPages>85</totalPages><number>3</number></page>"));
+		}
+	
 	private void mockBook() {
 		book.setTitle("Docker Deep Dive");
 		book.setAuthor("Nigel Poulton");
