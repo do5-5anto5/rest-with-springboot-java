@@ -346,7 +346,7 @@ public class BookControllerYamlTest extends AbstractIntegrationTest {
 												ContentType.TEXT)))
 				.contentType(TestConfigs.CONTENT_TYPE_YML)
 				.accept(TestConfigs.CONTENT_TYPE_YML)
-				.queryParams("page", 3, "size", 10, "dicrection", "asc")
+				.queryParams("page", 3, "size", 12, "dicrection", "asc")
 					.when()
 					.get()
 				.then()

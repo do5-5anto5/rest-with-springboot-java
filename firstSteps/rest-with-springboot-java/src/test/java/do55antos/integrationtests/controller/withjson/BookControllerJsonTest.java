@@ -282,7 +282,7 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON)
-				.queryParams("page", 3, "size", 10, "direction", "asc")
+				.queryParams("page", 3, "size", 12, "direction", "asc")
 					.when()
 					.get()
 				.then()

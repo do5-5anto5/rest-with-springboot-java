@@ -367,7 +367,7 @@ public void testFindById() throws JsonMappingException, JsonProcessingException 
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_XML)
 				.accept(TestConfigs.CONTENT_TYPE_XML)
-				.queryParams("page", 3, "size", 10, "dicrection", "asc")
+				.queryParams("page", 3, "size", 12, "direction", "asc")
 					.when()
 					.get()
 				.then()

@@ -291,7 +291,7 @@ public class BookControllerXmlTest extends AbstractIntegrationTest {
 		var content = given().spec(specification)
 				.contentType(TestConfigs.CONTENT_TYPE_XML)
 				.accept(TestConfigs.CONTENT_TYPE_XML)
-				.queryParams("page", 3, "size", 10, "dicrection", "asc")
+				.queryParams("page", 3, "size", 12, "dicrection", "asc")
 					.when()
 					.get()
 				.then()
