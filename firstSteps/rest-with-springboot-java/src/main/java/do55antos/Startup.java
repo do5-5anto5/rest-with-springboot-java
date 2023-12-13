@@ -1,8 +1,18 @@
 /**
  * Improving skills in API RESTful
- * last commit 10, December, 2023 _ 22:00 pm (UTC -3) 
+ * last commit 13, December, 2023 _ 10:25 pm (UTC -3) 
  * 
- * fix unit tests, implement HATEOAS tests with JSON, XML and YAML
+ * Dockerfile; docker-compose-yml; fix HATEOAS tests; 
+ * 
+ *  PS.:
+ *  (Unless the container is rebuilt before testing)
+ *  Whenever you run the join tests on the container,
+ *  new elements are added to the database. So the total number of 
+ *  elements and the last page assertions of the HATEOAS tests always change.
+ *  The lines of these assertions were removed from the tests 
+ *  to upload the image without confusing and unnecessary problems.
+ *  MockBook testCreate was with an error stubbing - fixed too  
+ *
  */
 
 package do55antos;
