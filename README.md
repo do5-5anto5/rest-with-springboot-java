@@ -1,5 +1,5 @@
 # REST with Springboot and Java
 
-# Main branch is protected. Commits divided and organized by branches, as the API was developed.
+#Commits divided and organized in branches, by themes, as the API was developed.
 
 [![Docker Hub Repo](https://img.shields.io/docker/pulls/do55anto5/rest-with-spring-boot-java.svg)](https://hub.docker.com/repository/docker/do55anto5/rest-with-spring-boot-java)
