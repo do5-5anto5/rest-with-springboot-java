@@ -3,7 +3,7 @@ server:
 cors:
   originPatterns: http://localhost:3000,http://localhost:8080,https://github.com/do5-5anto5
 file:
-  upload-dir: /home/runner/work/UploadDir
+  upload-dir: /home/runner/work/rest-with-springboot-java/UploadDir
 security:
   jwt:
     token:
