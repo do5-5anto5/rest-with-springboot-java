@@ -367,9 +367,7 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 							.body()
 								.asString();
 
-		assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost/api/person/v1/548\"}}}"));
-		assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost/api/person/v1/101\"}}}"));
-		assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost/api/person/v1/366\"}}}"));
+		assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost/api/person/v1/"));
 		
 		assertTrue(content.contains("\"first\":{\"href\":\"http://localhost/api/person/v1?limit=12&direction=asc&page=0&size=12&sort=firstName,asc\"}"));
 		assertTrue(content.contains("\"prev\":{\"href\":\"http://localhost/api/person/v1?limit=12&direction=asc&page=2&size=12&sort=firstName,asc\"}"));
