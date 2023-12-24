@@ -2,7 +2,8 @@
  * Improving skills in API RESTful
  * last commit 14, December, 2023 _ 09:00 pm (UTC -3) 
  * 
- * fixed application.yml from tests
+ * real font of the error in github actions found.
+ * that was just assertions port on strings in CORS test
  */
 
 package do55antos;

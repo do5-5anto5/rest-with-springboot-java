@@ -376,12 +376,12 @@ public void testFindById() throws JsonMappingException, JsonProcessingException 
 						.body()
 							.asString();
 
-		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost/api/person/v1/"));
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/person/v1/"));
 		
-		assertTrue(content.contains("<links><rel>first</rel><href>http://localhost/api/person/v1?limit=12&amp;direction=asc&amp;page=0&amp;size=12&amp;sort=firstName,asc</href></links>"));
-		assertTrue(content.contains("<links><rel>prev</rel><href>http://localhost/api/person/v1?limit=12&amp;direction=asc&amp;page=2&amp;size=12&amp;sort=firstName,asc</href></links>"));
-		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost/api/person/v1?page=3&amp;limit=12&amp;direction=asc</href></links>"));
-		assertTrue(content.contains("<links><rel>next</rel><href>http://localhost/api/person/v1?limit=12&amp;direction=asc&amp;page=4&amp;size=12&amp;sort=firstName,asc</href></links>"));
+		assertTrue(content.contains("<links><rel>first</rel><href>http://localhost:8888/api/person/v1?limit=12&amp;direction=asc&amp;page=0&amp;size=12&amp;sort=firstName,asc</href></links>"));
+		assertTrue(content.contains("<links><rel>prev</rel><href>http://localhost:8888/api/person/v1?limit=12&amp;direction=asc&amp;page=2&amp;size=12&amp;sort=firstName,asc</href></links>"));
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/person/v1?page=3&amp;limit=12&amp;direction=asc</href></links>"));
+		assertTrue(content.contains("<links><rel>next</rel><href>http://localhost:8888/api/person/v1?limit=12&amp;direction=asc&amp;page=4&amp;size=12&amp;sort=firstName,asc</href></links>"));
 		}
 	
 	private void mockPerson() {
